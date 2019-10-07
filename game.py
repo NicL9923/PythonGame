@@ -3,7 +3,7 @@ from sys import exit
 from pygame.locals import *
 
 from characterClasses import *
-#from gameObjectClass import *
+from gameObjectClass import *
 
 
 pygame.init()
@@ -38,8 +38,8 @@ spriteList.add(player.sprite)
 
 #Game's main loop
 while running:
-    #pygame.time.delay(5000)
-    print(gameClock.get_fps())
+
+    print(int(gameClock.get_fps()))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -48,23 +48,18 @@ while running:
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_w] and player.yPos > player.speed:
-            print("W")
             player.yPos -= player.speed
         elif keys[pygame.K_s] and player.yPos < screenHeight - 25:
-            print("S")
             player.yPos += player.speed
         if keys[pygame.K_a] and player.xPos > player.speed:
-            print("A")
             player.xPos -= player.speed
         elif keys[pygame.K_d] and player.xPos < screenWidth - 25:
-            print("D")
             player.xPos += player.speed
 
     #Update stuff
     player.update()
 
     #Rendering stuff
-    #window.fill((0, 0, 0))
     spriteList.draw(window)
     pygame.display.update()
 

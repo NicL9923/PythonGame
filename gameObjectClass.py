@@ -1,5 +1,17 @@
-
+import pygame
 
 class GameObject:
-    def __init__(self):
-        #asd
+    def __init__(self, xPos, yPos):
+        self.xPos = xPos
+        self.yPos = yPos
+
+class Projectile(GameObject):
+    def __init__(self, xPos, yPos, speed, direction, radius, color):
+        super().__init__()
+        self.speed = speed
+        self.direction = direction
+        self.radius = radius
+        self.color = color
+
+    def draw(window):
+        pygame.draw.circle(window, self.color, (self.xPos, self.yPos), self.radius)
