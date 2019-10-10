@@ -7,11 +7,11 @@ class GameObject:
 
 class Projectile(GameObject):
     def __init__(self, xPos, yPos, speed, direction, radius, color):
-        super().__init__()
+        super().__init__(xPos, yPos)
         self.speed = speed
         self.direction = direction
         self.radius = radius
         self.color = color
 
-    def draw(window):
+    def draw(self, window):
         pygame.draw.circle(window, self.color, (self.xPos, self.yPos), self.radius)

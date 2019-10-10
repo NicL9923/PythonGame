@@ -8,6 +8,7 @@ class Character:
         self.yPos = startY
         self.speed = speed
         self.sprite = Sprite(spritePath)
+        self.facing = "right"
 
     def update(self):
         self.sprite.rect.x = self.xPos
