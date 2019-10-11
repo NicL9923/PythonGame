@@ -4,6 +4,7 @@ from pygame.locals import *
 
 from characterClasses import *
 from gameObjectClass import *
+from uiClasses import *
 
 
 pygame.init()
