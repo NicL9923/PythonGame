@@ -3,16 +3,22 @@ from spriteClass import *
 
 class Character:
 
-    def __init__(self, startX = 0, startY = 0, speed = 2, spritePath = ""):
+    def __init__(self, startX = 0, startY = 0, speed = 2, health = 100, spritePath = ""):
         self.xPos = startX
         self.yPos = startY
         self.speed = speed
         self.sprite = Sprite(spritePath)
         self.facing = "right"
+        self.hitbox = (self.xPos, self.yPos, 32, 32)
+        self.health = health
 
     def update(self):
         self.sprite.rect.x = self.xPos
         self.sprite.rect.y = self.yPos
+        self.hitbox = (self.xPos, self.yPos, 32, 32)
+
+    def hit(self):
+        print("Character collision")
 
     def setXPos(self, xPos):
         self.xPos = xPos
@@ -37,15 +43,15 @@ class Character:
     
 
 class PlayerCharacter(Character):
-    def __init__(self, startX, startY, speed, spritePath):
-        super().__init__(startX, startY, speed, spritePath)
+    def __init__(self, startX, startY, speed, health, spritePath):
+        super().__init__(startX, startY, speed, health, spritePath)
 
 
 class FriendlyCharacter(Character):
-    def __init__(self, startX, startY, speed, spritePath):
-        super().__init__(startX, startY, speed, spritePath)
+    def __init__(self, startX, startY, speed, health, spritePath):
+        super().__init__(startX, startY, speed, health, spritePath)
 
 
 class EnemyCharacter(Character):
-    def __init__(self, startX, startY, speed, spritePath):
-        super().__init__(startX, startY, speed, spritePath)
+    def __init__(self, startX, startY, speed, health, spritePath):
+        super().__init__(startX, startY, speed, health, spritePath)

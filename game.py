@@ -9,11 +9,13 @@ from uiClasses import *
 
 pygame.init()
 
-
 #Global game/window variables
 running = True
+onMenu = True
 screenWidth = 800
 screenHeight = 700
+font = pygame.font.SysFont('segoeuiblack', 30)
+itemsFound = 0
 
 #Window creation
 window = pygame.display.set_mode((screenWidth, screenHeight))
@@ -25,7 +27,7 @@ gameClock = pygame.time.Clock()
 
 
 #Object creation/handling
-player = PlayerCharacter(250, 250, 3, "sprites/characters/AidenSpiderman.png")
+player = PlayerCharacter(250, 250, 3, 100, "sprites/characters/AidenSpiderman.png")
 bullets = []
 
 #Sprite handling
@@ -35,8 +37,31 @@ background = Sprite("sprites/Background.png")
 spriteList.add(background)
 spriteList.add(player.sprite)
 
+#Main Menu Loop
+while onMenu:
 
-#Game's main loop
+        mainMenu = MainMenu(screenWidth, screenHeight)
+
+        print(int(gameClock.get_fps()))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                onMenu = False
+                running = False
+        
+        mousePos = pygame.mouse.get_pos()
+        mouseClick = pygame.mouse.get_pressed()
+
+
+        if not mainMenu.update(mousePos, mouseClick):
+            onMenu = False
+
+        mainMenu.draw(window)
+        pygame.display.update()
+
+        gameClock.tick(30)
+
+
+#Game's Main Loop
 while running:
 
     print(int(gameClock.get_fps()))
@@ -63,21 +88,22 @@ while running:
 
     if keys[pygame.K_SPACE]:
         if len(bullets) < 20:
-                bullets.append(Projectile(player.xPos, player.yPos, 10, player.facing, 2, (0, 0, 0)))
+            bullets.append(Projectile(player.xPos, player.yPos, 10, player.facing, 2, (0, 0, 0)))
 
 
     if keys[pygame.K_w] and player.yPos > player.speed:
-            player.yPos -= player.speed
-            player.facing = "up"
+        player.yPos -= player.speed
+        player.facing = "up"
+        itemsFound += 1
     elif keys[pygame.K_s] and player.yPos < screenHeight - 25:
-            player.yPos += player.speed
-            player.facing = "down"
+        player.yPos += player.speed
+        player.facing = "down"
     if keys[pygame.K_a] and player.xPos > player.speed:
-            player.xPos -= player.speed
-            player.facing = "left"
+        player.xPos -= player.speed
+        player.facing = "left"
     elif keys[pygame.K_d] and player.xPos < screenWidth - 25:
-            player.xPos += player.speed
-            player.facing = "right"
+        player.xPos += player.speed
+        player.facing = "right"
 
     #Update stuff
     player.update()
@@ -88,10 +114,15 @@ while running:
     for bullet in bullets:
         bullet.draw(window)
 
+    pygame.draw.rect(window, (255, 0, 0), player.hitbox, 2)
+
+    text = font.render("Items found: " + str(itemsFound), 1, (0, 128, 128))
+    window.blit(text, (10, 10))
+
     pygame.display.update()
 
-    gameClock.tick(60)
 
+    gameClock.tick(60)
 
 pygame.quit()
 exit()
