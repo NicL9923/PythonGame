@@ -1,4 +1,5 @@
 import pygame
+from sys import exit
 from spriteClass import *
 
 class Button:
@@ -28,16 +29,13 @@ class Button:
             
         return False
 
-#TODO
-class ProgressBar:
-    def __init__(self):
-        self.self = self
-
 class MainMenu:
     def __init__(self, screenWidth, screenHeight):
         self.gameLogo = pygame.image.load("sprites/Logo.png")
-        self.background = pygame.image.load("sprites/Background.png")
-        self.newGameButton = Button(screenWidth / 2, screenHeight /2, 250, 100, (255, 0, 0), "New Game")
+        self.background = pygame.image.load("sprites/MainMenuBG.png")
+        self.newGameButton = Button(screenWidth / 2 - 125, 250, 250, 100, (255, 0, 0), "New Game")
+        self.loadGameButton = Button(screenWidth / 2 - 125, 400, 250, 100, (0, 255, 0), "Load Game")
+        self.exitGameButton = Button(screenWidth / 2 - 125, 550, 250, 100, (0, 0, 255), "Exit Game")
 
     def update(self, mousePos, mouseClick):
         #if mouse within sprites, display a separate, brighter sprite?
@@ -45,6 +43,12 @@ class MainMenu:
             print("Hovering over New Game button")
             if mouseClick[0] == 1:
                 return self.onClickNewGame()
+        if self.loadGameButton.mouseIsHover(mousePos):
+            if mouseClick[0] == 1:
+                return self.onClickLoadGame()
+        if self.exitGameButton.mouseIsHover(mousePos):
+            if mouseClick[0] == 1:
+                return self.onClickExitGame()
         return True
 
 
@@ -53,7 +57,16 @@ class MainMenu:
         window.blit(self.background, (0, 0))
         window.blit(self.gameLogo, (100, 10))
         self.newGameButton.draw(window)
+        self.loadGameButton.draw(window)
+        self.exitGameButton.draw(window)
     
     def onClickNewGame(self):
         return False
     
+    def onClickLoadGame(self):
+        return False
+
+    def onClickExitGame(self):
+        pygame.quit()
+        exit()
+        return False

@@ -5,6 +5,7 @@ from pygame.locals import *
 from characterClasses import *
 from gameObjectClass import *
 from uiClasses import *
+from levelClass import *
 
 
 pygame.init()
@@ -37,6 +38,14 @@ background = Sprite("sprites/Background.png")
 spriteList.add(background)
 spriteList.add(player.sprite)
 
+#Audio handling
+#sound = pygame.mixer.Sound("fileName")
+#sound.play()
+
+#music = pygame.mixer.music.load("fileName")
+#pygame.mixer.music.play(-1 to loop)
+
+
 #Main Menu Loop
 while onMenu:
 
@@ -58,7 +67,7 @@ while onMenu:
         mainMenu.draw(window)
         pygame.display.update()
 
-        gameClock.tick(30)
+        gameClock.tick(60)
 
 
 #Game's Main Loop
@@ -114,7 +123,7 @@ while running:
     for bullet in bullets:
         bullet.draw(window)
 
-    pygame.draw.rect(window, (255, 0, 0), player.hitbox, 2)
+    #pygame.draw.rect(window, (255, 0, 0), player.hitbox, 2)
 
     text = font.render("Items found: " + str(itemsFound), 1, (0, 128, 128))
     window.blit(text, (10, 10))
