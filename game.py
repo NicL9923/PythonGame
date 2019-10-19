@@ -21,7 +21,7 @@ itemsFound = 0
 #Window creation
 window = pygame.display.set_mode((screenWidth, screenHeight))
 pygame.display.set_caption("Aiden's World")
-windowIcon = pygame.image.load("sprites/Icon.png")
+windowIcon = pygame.image.load("sprites/Icon.png").convert_alpha()
 pygame.display.set_icon(windowIcon)
 gameClock = pygame.time.Clock()
 
@@ -42,14 +42,14 @@ spriteList.add(player.sprite)
 #sound = pygame.mixer.Sound("fileName")
 #sound.play()
 
-#music = pygame.mixer.music.load("fileName")
-#pygame.mixer.music.play(-1 to loop)
+music = pygame.mixer.music.load("audio/music/Explore1.wav")
+pygame.mixer.music.play(-1)
 
 
 #Main Menu Loop
 while onMenu:
 
-        mainMenu = MainMenu(screenWidth, screenHeight)
+        mainMenu = MainMenu(screenWidth)
 
         print(int(gameClock.get_fps()))
         for event in pygame.event.get():
@@ -69,6 +69,8 @@ while onMenu:
 
         gameClock.tick(60)
 
+music = pygame.mixer.music.load("audio/music/Wonder1.wav")
+pygame.mixer.music.play(-1)
 
 #Game's Main Loop
 while running:
