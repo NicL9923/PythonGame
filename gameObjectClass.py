@@ -1,4 +1,5 @@
 import pygame
+from spriteClass import *
 
 class GameObject:
     def __init__(self, xPos, yPos):
@@ -15,3 +16,8 @@ class Projectile(GameObject):
 
     def draw(self, window):
         pygame.draw.circle(window, self.color, (self.xPos, self.yPos), self.radius)
+
+class Collectible(GameObject):
+    def __init__(self, xPos, yPos):
+        super().__init__(xPos, yPos)
+        self.sprite = Sprite("sprites/items/Pumpkin.png")

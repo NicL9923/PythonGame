@@ -1,4 +1,5 @@
 import pygame
+import random
 from sys import exit
 from pygame.locals import *
 
@@ -14,7 +15,7 @@ pygame.init()
 running = True
 onMenu = True
 screenWidth = 800
-screenHeight = 700
+screenHeight = 704
 font = pygame.font.SysFont('segoeuiblack', 30)
 itemsFound = 0
 
@@ -24,11 +25,16 @@ pygame.display.set_caption("Aiden's World")
 windowIcon = pygame.image.load("sprites/Icon.png").convert_alpha()
 pygame.display.set_icon(windowIcon)
 gameClock = pygame.time.Clock()
+random.seed()
 
 
 
 #Object creation/handling
 player = PlayerCharacter(250, 250, 3, 100, "sprites/characters/AidenSpiderman.png")
+pumpkinCollectibles = []
+for i in range(15):
+    pumpkinCollectibles.append(Collectible(random.randint(1, 799), random.randint(1, 704)))
+
 bullets = []
 
 #Sprite handling
@@ -37,6 +43,10 @@ background = Sprite("sprites/Background.png")
 
 spriteList.add(background)
 spriteList.add(player.sprite)
+for pumpkin in pumpkinCollectibles:
+    pumpkin.sprite.rect.x = pumpkin.xPos
+    pumpkin.sprite.rect.y = pumpkin.yPos
+    spriteList.add(pumpkin.sprite)
 
 #Audio handling
 #sound = pygame.mixer.Sound("fileName")
@@ -94,6 +104,13 @@ while running:
         else:
             bullets.pop(bullets.index(bullet))
 
+    for pumpkin in pumpkinCollectibles:
+        if player.xPos >= pumpkin.xPos - 16 and player.xPos <= pumpkin.xPos + 16:
+            if player.yPos >= pumpkin.yPos + 16 and player.yPos <= pumpkin.yPos - 16:
+                itemsFound += 1
+                pumpkin.sprite.kill()
+                pumpkinCollectibles.pop(pumpkinCollectibles.index(pumpkin))
+
     #Input Management (Possibly moved to class InputManager later)
     keys = pygame.key.get_pressed()
 
@@ -105,7 +122,6 @@ while running:
     if keys[pygame.K_w] and player.yPos > player.speed:
         player.yPos -= player.speed
         player.facing = "up"
-        itemsFound += 1
     elif keys[pygame.K_s] and player.yPos < screenHeight - 25:
         player.yPos += player.speed
         player.facing = "down"
@@ -127,7 +143,7 @@ while running:
 
     #pygame.draw.rect(window, (255, 0, 0), player.hitbox, 2)
 
-    text = font.render("Items found: " + str(itemsFound), 1, (0, 128, 128))
+    text = font.render("Items found: " + str(itemsFound), 1, (255, 45, 45))
     window.blit(text, (10, 10))
 
     pygame.display.update()
