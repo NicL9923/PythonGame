@@ -131,17 +131,17 @@ while running:
         if len(bullets) < 20:
             bullets.append(Projectile(player.xPos, player.yPos, 10, player.facing, 2, (0, 0, 0)))
 
-
-    if keys[pygame.K_w] and player.yPos > player.speed:
+    #Behold probably the worst check for tile collision known to man, but it's mine so shhh
+    if keys[pygame.K_w] and player.yPos > player.speed and levelManager.tileList[LEVEL_1[int((player.yPos + 16 - player.speed) / 32)][int((player.xPos + 16) / 32)]].canWalkThrough:
         player.yPos -= player.speed
         player.facing = "up"
-    elif keys[pygame.K_s] and player.yPos < screenHeight - 25:
+    elif keys[pygame.K_s] and player.yPos < screenHeight - 25 and levelManager.tileList[LEVEL_1[int((player.yPos + 16 + player.speed) / 32)][int((player.xPos + 16) / 32)]].canWalkThrough:
         player.yPos += player.speed
         player.facing = "down"
-    if keys[pygame.K_a] and player.xPos > player.speed:
+    if keys[pygame.K_a] and player.xPos > player.speed and levelManager.tileList[LEVEL_1[int((player.yPos + 16) / 32)][int((player.xPos + 16 - player.speed) / 32)]].canWalkThrough:
         player.xPos -= player.speed
         player.facing = "left"
-    elif keys[pygame.K_d] and player.xPos < screenWidth - 25:
+    elif keys[pygame.K_d] and player.xPos < screenWidth - 25 and levelManager.tileList[LEVEL_1[int((player.yPos + 16) / 32)][int((player.xPos + 16 + player.speed) / 32)]].canWalkThrough:
         player.xPos += player.speed
         player.facing = "right"
 
@@ -162,7 +162,7 @@ while running:
 
     pygame.display.update()
 
-
+    print(int((player.yPos + 16 - player.speed) / 32))
     gameClock.tick(60)
 
 pygame.quit()
