@@ -30,6 +30,7 @@ random.seed()
 
 
 #Object creation/handling
+levelManager = LevelManager()
 player = PlayerCharacter(250, 250, 3, 100, "sprites/characters/AidenSpiderman.png")
 pumpkinCollectibles = []
 for i in range(15):
@@ -39,9 +40,7 @@ bullets = []
 
 #Sprite handling
 spriteList = pygame.sprite.Group()
-background = Sprite("sprites/Background.png")
 
-spriteList.add(background)
 spriteList.add(player.sprite)
 for pumpkin in pumpkinCollectibles:
     pumpkin.sprite.rect.x = pumpkin.xPos
@@ -57,30 +56,39 @@ pygame.mixer.music.play(-1)
 
 
 #Main Menu Loop
-while onMenu:
+def mainMenu():
+    global onMenu
+    global running
 
-        mainMenu = MainMenu(screenWidth)
+    onMenu = True
+    
+    while onMenu:
 
-        print(int(gameClock.get_fps()))
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            mainMenu = MainMenu(screenWidth)
+
+            print(int(gameClock.get_fps()))
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    onMenu = False
+                    running = False
+            
+            mousePos = pygame.mouse.get_pos()
+            mouseClick = pygame.mouse.get_pressed()
+
+
+            if not mainMenu.update(mousePos, mouseClick):
                 onMenu = False
-                running = False
-        
-        mousePos = pygame.mouse.get_pos()
-        mouseClick = pygame.mouse.get_pressed()
 
+            mainMenu.draw(window)
+            pygame.display.update()
 
-        if not mainMenu.update(mousePos, mouseClick):
-            onMenu = False
+            gameClock.tick(60)
 
-        mainMenu.draw(window)
-        pygame.display.update()
-
-        gameClock.tick(60)
 
 music = pygame.mixer.music.load("audio/music/Wonder1.wav")
 pygame.mixer.music.play(-1)
+
+mainMenu()
 
 #Game's Main Loop
 while running:
@@ -104,12 +112,17 @@ while running:
         else:
             bullets.pop(bullets.index(bullet))
 
+    #Collectibles check
     for pumpkin in pumpkinCollectibles:
         if player.xPos >= pumpkin.xPos - 16 and player.xPos <= pumpkin.xPos + 16:
-            if player.yPos >= pumpkin.yPos + 16 and player.yPos <= pumpkin.yPos - 16:
+            if player.yPos >= pumpkin.yPos - 16 and player.yPos <= pumpkin.yPos + 16:
                 itemsFound += 1
                 pumpkin.sprite.kill()
                 pumpkinCollectibles.pop(pumpkinCollectibles.index(pumpkin))
+
+    if itemsFound == 15:
+        itemsFound = 0
+        mainMenu()
 
     #Input Management (Possibly moved to class InputManager later)
     keys = pygame.key.get_pressed()
@@ -136,6 +149,7 @@ while running:
     player.update()
 
     #Rendering stuff
+    levelManager.drawLevel(window, LEVEL_1)
     spriteList.draw(window)
 
     for bullet in bullets:
