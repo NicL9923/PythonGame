@@ -27,7 +27,7 @@ class Button:
 class MainMenu:
     def __init__(self, screenWidth):
         self.gameLogo = pygame.image.load("sprites/Logo.png").convert_alpha()
-        self.background = pygame.image.load("sprites/MainMenuBG.png").convert_alpha()
+        self.background = pygame.transform.scale(pygame.image.load("sprites/MainMenuBG.png").convert_alpha(), (800, 704))
         self.newGameButton = Button(screenWidth / 2 - 125, 250, "sprites/ui/NewGameButton.png", "sprites/ui/NewGameButtonHover.png")
         self.loadGameButton = Button(screenWidth / 2 - 125, 400, "sprites/ui/LoadGameButton.png", "sprites/ui/LoadGameButtonHover.png")
         self.exitGameButton = Button(screenWidth / 2 - 125, 550, "sprites/ui/ExitGameButton.png", "sprites/ui/ExitGameButtonHover.png")

@@ -7,6 +7,10 @@ from characterClasses import *
 from gameObjectClass import *
 from uiClasses import *
 from levelClass import *
+########NOTES#########
+#If ever needed, change LEVEL_1 to levelManager.currentLevel
+#Objective: Gather all 15 pumpkins
+#Controls: WASD, SPACE to shoot, ESC to menu
 
 
 pygame.init()
@@ -27,29 +31,38 @@ pygame.display.set_icon(windowIcon)
 gameClock = pygame.time.Clock()
 random.seed()
 
-
-
 #Object creation/handling
 levelManager = LevelManager()
-player = PlayerCharacter(250, 250, 3, 100, "sprites/characters/AidenSpiderman.png")
-pumpkinCollectibles = []
-for i in range(15):
-    pumpkinCollectibles.append(Collectible(random.randint(1, 799), random.randint(1, 704)))
-
-bullets = []
-
-#Sprite handling
 spriteList = pygame.sprite.Group()
-
+player = PlayerCharacter(250, 250, 3, 100, "sprites/characters/AidenSpiderman.png")
 spriteList.add(player.sprite)
-for pumpkin in pumpkinCollectibles:
-    pumpkin.sprite.rect.x = pumpkin.xPos
-    pumpkin.sprite.rect.y = pumpkin.yPos
-    spriteList.add(pumpkin.sprite)
+bullets = []
+pumpkinCollectibles = []
+
+#Create pumpkin collectibles
+def createPumpkins():
+    global pumpkinCollectibles
+    global levelManager
+    global spriteList
+    for i in range(15):
+        x = random.randint(1, 799)
+        y = random.randint(1, 704)
+        #Make sure pumpkins don't spawn in walls
+        while not levelManager.tileList[LEVEL_1[int(y / 32)][int(x / 32)]].canWalkThrough:
+            x = random.randint(1, 799)
+            y = random.randint(1, 704)
+    
+        pumpkinCollectibles.append(Collectible(x, y))
+
+    for pumpkin in pumpkinCollectibles:
+        pumpkin.sprite.rect.x = pumpkin.xPos
+        pumpkin.sprite.rect.y = pumpkin.yPos
+        spriteList.add(pumpkin.sprite)
+
 
 #Audio handling
-#sound = pygame.mixer.Sound("fileName")
-#sound.play()
+    #sound = pygame.mixer.Sound("fileName")
+    #sound.play()
 
 music = pygame.mixer.music.load("audio/music/Explore1.wav")
 pygame.mixer.music.play(-1)
@@ -88,6 +101,7 @@ def mainMenu():
 music = pygame.mixer.music.load("audio/music/Wonder1.wav")
 pygame.mixer.music.play(-1)
 
+createPumpkins()
 mainMenu()
 
 #Game's Main Loop
@@ -112,7 +126,7 @@ while running:
         else:
             bullets.pop(bullets.index(bullet))
 
-    #Collectibles check
+    #Check for player picking up pumpkins
     for pumpkin in pumpkinCollectibles:
         if player.xPos >= pumpkin.xPos - 16 and player.xPos <= pumpkin.xPos + 16:
             if player.yPos >= pumpkin.yPos - 16 and player.yPos <= pumpkin.yPos + 16:
@@ -120,9 +134,11 @@ while running:
                 pumpkin.sprite.kill()
                 pumpkinCollectibles.pop(pumpkinCollectibles.index(pumpkin))
 
+    #For now, restart/go back to main menu when all 15 pumpkins have been found
     if itemsFound == 15:
         itemsFound = 0
         mainMenu()
+        createPumpkins()
 
     #Input Management (Possibly moved to class InputManager later)
     keys = pygame.key.get_pressed()
@@ -144,6 +160,8 @@ while running:
     elif keys[pygame.K_d] and player.xPos < screenWidth - 25 and levelManager.tileList[LEVEL_1[int((player.yPos + 16) / 32)][int((player.xPos + 16 + player.speed) / 32)]].canWalkThrough:
         player.xPos += player.speed
         player.facing = "right"
+    if keys[pygame.K_ESCAPE]:
+        mainMenu()
 
     #Update stuff
     player.update()
@@ -162,7 +180,6 @@ while running:
 
     pygame.display.update()
 
-    print(int((player.yPos + 16 - player.speed) / 32))
     gameClock.tick(60)
 
 pygame.quit()
